@@ -1,5 +1,8 @@
 import { Router } from 'express';
 
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { rateLimit } from 'express-rate-limit';
+
 import {
   createUserHandler,
   deleteUserHandler,
@@ -10,6 +13,13 @@ import {
 import { isAuthenticated } from '../auth/auth.services';
 
 const router = Router();
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // max 100 requests per windowMs
+});
+// apply rate limiter to all requests
+router.use(limiter);
 
 /**
  * @openapi
